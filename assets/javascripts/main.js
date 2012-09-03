@@ -35,7 +35,7 @@ require([
     'templates'
 ], function($, _, AppView, Workspace, templates) {
     $(document).attr('title', "Mimosa-Flavored Todo App");
-    $('body').html(templates.index).show();
+    $('body').html(templates.index).css('display', 'block');
 
     // Initialize routing and start Backbone.history()
     new Workspace();
