@@ -17,8 +17,7 @@ requirejs.config({
     paths: {
         jquery: 'vendor/jquery.min',
         underscore: 'vendor/underscore',
-        backbone: 'vendor/backbone',
-        text: 'vendor/text'
+        backbone: 'vendor/backbone'
     },
     map: {
         templates: {
@@ -31,12 +30,8 @@ require([
     'jquery',
     'underscore',
     'app/views/app',
-    'app/routers/router',
-    'templates'
-], function($, _, AppView, Workspace, templates) {
-    $(document).attr('title', "Mimosa-Flavored Todo App");
-    $('body').html(templates.index).css('display', 'block');
-
+    'app/routers/router'
+], function($, _, AppView, Workspace) {
     // Initialize routing and start Backbone.history()
     new Workspace();
     Backbone.history.start();

@@ -13,7 +13,8 @@ exports.config = {
   # watch:
     # sourceDir: "assets"                 # directory location of web assets
     # compiledDir: "public"               # directory location of compiled web assets
-    # ignored: [".sass-cache"]            # file extensions to not watch on file system
+    # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
+                                          # will be skipped
     # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
                                           # those files finish their processing. This helps avoid EMFILE issues for projects
                                           # containing large numbers of files that all get copied at once. If the throttle is
@@ -40,15 +41,15 @@ exports.config = {
                                                                      # to exist
 
     css:
-      compileWith: "none"                     # Other options: "none", "less", "stylus".  "none" assumes you are coding pure CSS and
-                                              # the copy config will move that over for you.  More compilers to come.
-      # extensions: ["scss", "sass"]          # list of extensions to compile
+      compileWith: "none"                  # Other options: "none", "less", "sass".  "none" assumes you are coding pure CSS and
+                                           # the copy config will move that over for you.  More compilers to come.
+      # extensions: ["styl"]               # list of extensions to compile
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
   ###
   # copy:
-    # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml"]
+    # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
 
   server:                                 # configuration for server when server option is enabled via CLI
     useDefaultServer: true                # whether or not mimosa starts a default server for you,
@@ -59,8 +60,13 @@ exports.config = {
                                           # the layout of the dev version of the app
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
                                           # which must contain a start() method
-    # port: 3000                          # valid when useDefaultServer: true, port the default server will start on
-    # base: '/app'                        # valid when useDefaultServer: true, base of the app in default mode
+    # port: 3000                          # port to start server on
+    # base: ''                            # valid when useDefaultServer: true, base of the app in default mode
+    # views:                              # configuration for the view layer of your application
+      # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
+                                          # useDefaultServer: true
+      # extension: 'jade'                  # extension of your server views
+      # path: 'views'                     # path from the root of your project to your views
 
   # require:                              # configuration for requirejs options.
     # verify:                             # settings for requirejs path verification
