@@ -16,13 +16,8 @@ requirejs.config({
     },
     paths: {
         jquery: 'vendor/jquery.min',
-        underscore: 'vendor/underscore',
-        backbone: 'vendor/backbone'
-    },
-    map: {
-        templates: {
-            'vendor/underscore': 'underscore'
-        }
+        underscore: 'vendor/underscore.min',
+        backbone: 'vendor/backbone.min'
     }
 });
 

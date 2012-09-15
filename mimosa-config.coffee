@@ -1,5 +1,3 @@
-# Mimosa Config
-#
 # All of the below are mimosa defaults and only need to be uncommented
 # in the event you want to override them.
 #
@@ -9,10 +7,11 @@
 # to respect coffeescript indentation rules.  2 spaces per level please! =)
 
 exports.config = {
-
   # watch:
     # sourceDir: "assets"                 # directory location of web assets
     # compiledDir: "public"               # directory location of compiled web assets
+    # javascriptDir: "javascripts"        # Location of precompiled javascript (coffeescript for instance), and therefore
+                                          # also the location of the compiled javascript.
     # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
                                           # will be skipped
     # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
@@ -21,29 +20,19 @@ exports.config = {
                                           # set to 0, no throttling is performed. Recommended to leave this set at 0, the
                                           # default, until you start encountering EMFILE problems.
 
-  compilers:
-    javascript:
-      # directory: "javascripts"              # Location of precompiled javascript (coffeescript for instance), and therefore
-                                              # also the location of the compiled javascript.
-                                              # For now this is only used by requirejs optimization, the rest of Mimosa doesn't
-                                              # care where you put your javascript (as long as it is inside the sourceDir)
-      compileWith: "none"                     # Other options: "iced", "none".  "none" assumes you are coding js by hand and
-                                              # the copy config will move that over for you
-      # extensions: ["coffee"]                # list of extensions to compile
+  # compilers:
+    # extensionOverrides:                 # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                          # see http://mimosajs.com/compilers.html for a list of compiler names
+      # coffee: ["coff"]                  # This is an example override, this is not a default, it must take the form of an array
 
-    template:
-      compileWith: "underscore"                                      # Other ops:"dust","jade","hogan","underscore","lodash","html","none".
-                                                                     # "none" assumes you aren't using any micro-templating solution.
-      extensions: ["tpl", "underscore"]                              # list of extensions to compile
-      # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
-      # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to the files
-                                                                     # containing handlebars helper/partial registrations, does not need
-                                                                     # to exist
-
-    css:
-      compileWith: "none"                  # Other options: "none", "less", "sass".  "none" assumes you are coding pure CSS and
-                                           # the copy config will move that over for you.  More compilers to come.
-      # extensions: ["styl"]               # list of extensions to compile
+  # template:
+    # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
+                                                                   # Optionally outputFileName can be provided a hash of template library
+                                                                   # name to file name in the event you are using multiple templating
+                                                                   # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
+    # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to
+                                                                   # the files containing handlebars helper/partial registrations,
+                                                                   # does not need to exist
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
@@ -52,20 +41,18 @@ exports.config = {
     # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
 
   server:                                 # configuration for server when server option is enabled via CLI
-    useDefaultServer: true                # whether or not mimosa starts a default server for you,
-                                          # when true, mimosa starts its own on the port below
-                                          # when false, mimosa will use server provided by path below
-    # useReload: true                     # valid for both default and custom server, when true, browser will be
-                                          # reloaded when asset is compiled.  This adds a few javascript files to
-                                          # the layout of the dev version of the app
-    # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
-                                          # which must contain a start() method
+    useDefaultServer: true                # whether or not mimosa starts a default server for you, when true, mimosa starts its
+                                          # own on the port below, when false, mimosa will use server provided by path below
+    # useReload: true                     # valid for both default and custom server, when true, browser will be reloaded when
+                                          # asset is compiled.  This adds a few javascript files to the layout of the dev
+                                          # version of the app
+    # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server which must contain
+                                          # export startServer method that takes an enriched mimosa-config object
     # port: 3000                          # port to start server on
-    # base: ''                            # valid when useDefaultServer: true, base of the app in default mode
+    # base: ''                            # base of the app in default mode
     # views:                              # configuration for the view layer of your application
-      # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
-                                          # useDefaultServer: true
-      # extension: 'jade'                  # extension of your server views
+      # compileWith: 'jade'               # Other valid options: "hogan", "html". The compiler for your views.
+      # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 
   # require:                              # configuration for requirejs options.
@@ -74,22 +61,20 @@ exports.config = {
     # optimize :
       # inferConfig:true                  # Mimosa figures out all you'd need for a simple r.js optimizer run. If you rather Mimosa
                                           # not do that, set inferConfig to false and provide your config in the overrides section.
-                                          # See ere https://github.com/dbashford/mimosa#requirejs-optimizer-defaults to see what
+                                          # See here https://github.com/dbashford/mimosa#requirejs-optimizer-defaults to see what
                                           # the defaults are.
       # overrides:                        # Optimization configuration and Mimosa overrides. If you need to make tweaks uncomment
                                           # this line and add the r.js config (http://requirejs.org/docs/optimization.html#options)
-                                          # as newparamters inside the optimize ojbect. To unset Mimosa's defaults, set a property
+                                          # as newparamters inside the overrides ojbect. To unset Mimosa's defaults, set a property
                                           # to null
 
   # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
-    # exclude:["\.min\."]                 # List of excluded file regexes when running minify using the --minify flag.  Any file
-                                          # possessing ".min." in its name, like jquery.min.js, is assumed to already be minified
-                                          # in a way that preserves functionality of the library, so it will be ignored.  If you have
-                                          # other files that you'd like to exempt from minification, overrides this property and
-                                          # include them.
+    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
+                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
+                                          # Override this property if you have other files that you'd like to exempt from minification
 
   # growl:
-    # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,
+    # onStartup: false                    # Controls whether or not to Growl when assets successfully compile/copy on startup,
                                           # If you've got 100 CoffeeScript files, and you do a clean and then start watching,
                                           # you'll get 100 Growl notifications.  This is set to false be default to prevent that.
     # onSuccess:                          # Controls whether or not to Growl when assets successfully compile/copy
@@ -115,5 +100,4 @@ exports.config = {
         # plusplus: true                  # This is an example override, this is not a default
       # css:                              # Settings: https://github.com/stubbornella/csslint/wiki/Rules
         # floats: false                   # This is an example override, this is not a default
-
 }
