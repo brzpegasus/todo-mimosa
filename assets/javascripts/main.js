@@ -16,17 +16,15 @@ requirejs.config({
     },
     paths: {
         jquery: 'vendor/jquery.min',
-        underscore: 'vendor/underscore.min',
+        underscore: 'vendor/underscore',
         backbone: 'vendor/backbone.min'
     }
 });
 
 require([
-    'jquery',
-    'underscore',
     'app/views/app',
     'app/routers/router'
-], function($, _, AppView, Workspace) {
+], function(AppView, Workspace) {
     // Initialize routing and start Backbone.history()
     new Workspace();
     Backbone.history.start();

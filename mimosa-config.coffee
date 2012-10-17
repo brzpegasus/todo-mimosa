@@ -8,31 +8,33 @@
 
 exports.config = {
   # watch:
-    # sourceDir: "assets"                 # directory location of web assets
-    # compiledDir: "public"               # directory location of compiled web assets
-    # javascriptDir: "javascripts"        # Location of precompiled javascript (coffeescript for instance), and therefore
-                                          # also the location of the compiled javascript.
-    # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
-                                          # will be skipped
-    # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
-                                          # those files finish their processing. This helps avoid EMFILE issues for projects
-                                          # containing large numbers of files that all get copied at once. If the throttle is
-                                          # set to 0, no throttling is performed. Recommended to leave this set at 0, the
-                                          # default, until you start encountering EMFILE problems.
+    # sourceDir: "assets"             # directory location of web assets
+    # compiledDir: "public"           # directory location of compiled web assets
+    # javascriptDir: "javascripts"    # Location of precompiled javascript (coffeescript for instance), and therefore
+                                      # also the location of the compiled javascript.
+    # ignored: [".sass-cache"]        # files to not watch on file system, any file containing one of the strings listed here
+                                      # will be skipped
+    # throttle: 0                     # number of file adds the watcher handles before taking a 100 millisecond pause to let
+                                      # those files finish their processing. This helps avoid EMFILE issues for projects
+                                      # containing large numbers of files that all get copied at once. If the throttle is
+                                      # set to 0, no throttling is performed. Recommended to leave this set at 0, the
+                                      # default, until you start encountering EMFILE problems.
 
   # compilers:
-    # extensionOverrides:                 # A list of extension overrides, format is compilerName:[arrayOfExtensions]
-                                          # see http://mimosajs.com/compilers.html for a list of compiler names
-      # coffee: ["coff"]                  # This is an example override, this is not a default, it must take the form of an array
+    # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                      # see http://mimosajs.com/compilers.html for a list of compiler names
+      # coffee: ["coff"]              # This is an example override, this is not a default, it must take the form of an array
 
   # template:
-    # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
-                                                                   # Optionally outputFileName can be provided a hash of template library
-                                                                   # name to file name in the event you are using multiple templating
-                                                                   # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
-    # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to
-                                                                   # the files containing handlebars helper/partial registrations,
-                                                                   # does not need to exist
+    # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
+                                                       # Optionally outputFileName can be provided a hash of file extension
+                                                       # to file name in the event you are using multiple templating
+                                                       # libraries. The file extension must match one of the default compiler extensions
+                                                       # or one of the extensions configure for a compiler in the
+                                                       # compilers.extensionOverrides section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
+    # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
+                                                       # the files containing handlebars helper/partial registrations,
+                                                       # does not need to exist
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
@@ -43,15 +45,13 @@ exports.config = {
   server:                                 # configuration for server when server option is enabled via CLI
     useDefaultServer: true                # whether or not mimosa starts a default server for you, when true, mimosa starts its
                                           # own on the port below, when false, mimosa will use server provided by path below
-    # useReload: true                     # valid for both default and custom server, when true, browser will be reloaded when
-                                          # asset is compiled.  This adds a few javascript files to the layout of the dev
-                                          # version of the app
+    # useReload: true                     # when true, browser will be reloaded when asset is compiled.
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server which must contain
                                           # export startServer method that takes an enriched mimosa-config object
     # port: 3000                          # port to start server on
-    # base: ''                            # base of the app in default mode
+    # base: ''                            # base of url for the app, if altered should start with a slash
     # views:                              # configuration for the view layer of your application
-      # compileWith: 'jade'               # Other valid options: "hogan", "html". The compiler for your views.
+      # compileWith: 'jade'               # Other valid options: "hogan", "html", "ejs". The compiler for your views.
       # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 
@@ -68,20 +68,21 @@ exports.config = {
                                           # as newparamters inside the overrides ojbect. To unset Mimosa's defaults, set a property
                                           # to null
 
-  # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
-    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
-                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
-                                          # Override this property if you have other files that you'd like to exempt from minification
-
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when assets successfully compile/copy on startup,
                                           # If you've got 100 CoffeeScript files, and you do a clean and then start watching,
-                                          # you'll get 100 Growl notifications.  This is set to false be default to prevent that.
+                                          # you'll get 100 Growl notifications.  This is set to false by default to prevent that.
+                                          # Growling for every successful file on startup can also cause EMFILE issues. See watch.throttle
     # onSuccess:                          # Controls whether or not to Growl when assets successfully compile/copy
       # javascript: true                  # send growl notification on successful compilation? will always send on failure
       # css: true                         # send growl notification on successful compilation? will always send on failure
       # template: true                    # send growl notification on successful compilation? will always send on failure
       # copy: true                        # send growl notification on successful copy?
+
+  # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
+    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
+                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
+                                          # Override this property if you have other files that you'd like to exempt from minification
 
   # lint:                                 # settings for js, css linting/hinting
     # compiled:                           # settings for compiled files
